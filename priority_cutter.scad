@@ -1,3 +1,9 @@
+/* priority_cutter.scad
+ *
+ * Originally by Lucas V. Hartmann <lhartmann@github.com>, 2016.
+ * Dual licenced under Creative Commons Attribution-Share Alike 3.0 and LGPL2 or later
+ */
+
 // 4 children:
 // Children(0) is the priority inverter mask.
 // Children(1...) are the blocks to be cut.

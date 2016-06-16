@@ -1,3 +1,9 @@
+/* minkowskibox.scad
+ *
+ * Originally by Lucas V. Hartmann <lhartmann@github.com>, 2016.
+ * Dual licenced under Creative Commons Attribution-Share Alike 3.0 and LGPL2 or later
+ */
+ 
 module minkowskibox(flattop, square, wall, clear, clear_tight, flatbottom=true, small=0.01, big=100) {
 	module bar(ax, start, end) {
 		rotate(

@@ -1,3 +1,9 @@
+/* nut.scad
+ *
+ * Originally by Lucas V. Hartmann <lhartmann@github.com>, 2016.
+ * Dual licenced under Creative Commons Attribution-Share Alike 3.0 and LGPL2 or later
+ */
+ 
 include <MCAD/units.scad>
 
 // Nuts = [UTS/ISO Dmaj, outer diameter, width, height]

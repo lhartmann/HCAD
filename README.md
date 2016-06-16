@@ -1,2 +1,2 @@
 # HCAD
-My OpenSCAD library
+My OpenSCAD library.

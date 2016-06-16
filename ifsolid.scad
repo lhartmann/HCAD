@@ -1,3 +1,9 @@
+/* ifsolid.scad: Collision detection conditional for OpenSCAD.
+ *
+ * Originally by Lucas V. Hartmann <lhartmann@github.com>, 2016.
+ * Dual licenced under Creative Commons Attribution-Share Alike 3.0 and LGPL2 or later
+ */
+ 
 // Usage:
 // ifsolid() {
 //     solid_under_test;
