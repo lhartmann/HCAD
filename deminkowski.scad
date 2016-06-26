@@ -5,12 +5,13 @@
  * Dual licenced under Creative Commons Attribution-Share Alike 3.0 and LGPL2 or later
  */
 
-module deminkowski() {
+module deminkowski(BIG=-1) {
     difference() { // Stage 4
         children(0);
         render() minkowski() { // Stage 3
             difference() { // Stage 2
-                render() minkowski() { // Stage 1
+				if (BIG>0) cube(BIG*[2,2,2], center=true);
+				else minkowski() { // Stage 1
                     children(0);
                     cube(center=true);
                 }
