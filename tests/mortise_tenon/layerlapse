@@ -1,0 +1,6 @@
+#! /bin/bash
+read -p "Enter desired framerate: " RATE || exit 0
+
+ffmpeg -r $RATE -i "frames/%*.png" -b:v 1.2M -pass 1 layerlapse.mp4 \
+&& rm -f layerlapse.mp4 \
+&& ffmpeg -r $RATE -i "frames/%*.png" -b:v 1.2M -pass 2 layerlapse.mp4
