@@ -19,22 +19,23 @@ mk8_sfb =  2.79*mm; // Fixation screw center from bottom.
 mk8_chm =  0.25*mm; // Chamfered edges
 
 module __mk8() {
+	// This profile creates a tube with chamfered edges
 	profile = [
-		[mk8_di/2, mk8_h-mk8_chm],
+		[mk8_di/2,         mk8_h-mk8_chm],
 		[mk8_di/2+mk8_chm, mk8_h],
-		[mk8_d/2-mk8_chm, mk8_h],
-		[mk8_d/2, mk8_h-mk8_chm],
-		[mk8_d/2, mk8_chm],
-		[mk8_d/2-mk8_chm, 0],
+		[mk8_d/2-mk8_chm,  mk8_h],
+		[mk8_d/2,          mk8_h-mk8_chm],
+		[mk8_d/2,          mk8_chm],
+		[mk8_d/2-mk8_chm,  0],
 		[mk8_di/2+mk8_chm, 0],
-		[mk8_di/2, mk8_chm]
+		[mk8_di/2,         mk8_chm]
 	];
 
 	color(Aluminum) rotate_extrude(, $fn=32) {
 		difference() {
 			polygon(points=profile);
 			translate([mk8_d/2, mk8_ffb])
-				scale([(mk8_d-mk8_df)/mk8_hf*2,1,1])
+				scale([(mk8_d-mk8_df)/mk8_hf,1,1])
 				circle(r=mk8_hf/2, $fn=32);
 		}
 	}
