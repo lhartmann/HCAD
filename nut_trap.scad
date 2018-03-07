@@ -4,7 +4,7 @@
  * Dual licenced under Creative Commons Attribution-Share Alike 3.0 and LGPL2 or later
  */
 
- include <MCAD/units.scad>
+include <MCAD/units.scad>
 include <nut.scad>
 
 // Original drawing position: origin at the center of the nut
@@ -14,18 +14,26 @@ module __nut_trap(
 	insert_depth_side, // Depth of the nut insertion hole, face to center of nut
 	bolt_len,          // Length of the bolt hole from the top face
 	clear=0,           // General clearances
-    nutmodel = NUT_1_8_INCH
+    nutmodel = NUT_1_8_INCH,
+	cap = false
 ) {
-	intersection() {
+	
+	difference() {
+		// Bolt body
+		translate([0,0,insert_depth_top-bolt_len-clear]) cylinder(r=nutDmaj(nutmodel)/2+clear, h=bolt_len+2*clear, $fn=32);
+		
+		translate([0,0,+cap]) _x();
+		translate([0,0,-cap]) _x();
+	}
+	_x();
+	
+	module _x() {
 		// "Slide" the nut in place
 		hull() {
 			cylinder(r=nutDiameter(nutmodel)/2+clear/cos(30), h=nutHeight(nutmodel)+2*clear, $fn=6, center=true);
 			translate([insert_depth_side,0,0]) cylinder(r=nutDiameter(nutmodel)/2+clear/cos(30), h=nutHeight(nutmodel)+2*clear, $fn=6, center=true);
 		}
-//		cube([2*insert_depth_side+2*clear, 2*nut_1_8_d, 2*nut_1_8_h], center = true);
 	}
-	// Bolt body
-	translate([0,0,insert_depth_top-bolt_len-clear]) cylinder(r=nutDmaj(nutmodel)/2+clear, h=bolt_len+2*clear, $fn=32);
 }
 
 function nut_trap_pos(ref, nutmodel=NUT_1_8_INCH) =
@@ -56,12 +64,13 @@ module nut_trap(
 	bolt_len,          // Length of the bolt hole from the top face
 	clear=0,           // General clearances
 	ref = "nut middle",
-	nutmodel = NUT_1_8_INCH
+	nutmodel = NUT_1_8_INCH,
+	cap = false
 ) {
 	nut_trap_translate(
 		insert_depth_top, insert_depth_side, bolt_len,
 		ref, "origin", nutmodel
 	) __nut_trap(
-		insert_depth_top, insert_depth_side, bolt_len, clear, nutmodel
+		insert_depth_top, insert_depth_side, bolt_len, clear, nutmodel, cap
 	);
 }
