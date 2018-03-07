@@ -22,3 +22,20 @@ module deminkowski(BIG=-1) {
 	}
 }
 
+module deminkowski2d(BIG=-1) {
+	difference() { // Stage 4
+		children(0);
+		render() minkowski() { // Stage 3
+			difference() { // Stage 2
+				if (BIG>0) cube(BIG*[2,2,2], center=true);
+				else minkowski() { // Stage 1
+					children(0);
+					square(center=true);
+				}
+				children(0);
+			}
+			children(1);
+		}
+	}
+}
+
