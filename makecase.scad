@@ -1,4 +1,4 @@
-/* makecase.scad: Functionality liker makercase, except made in openscad.
+/* makecase.scad: Functionality similar to makercase.com, except made in openscad.
  *
  * Original by Lucas V. Hartmann <first_name dot last_name at G's mail>, 2018.
  * Dual licenced under Creative Commons Attribution-Share Alike 3.0 and LGPL2 or later
@@ -7,6 +7,10 @@
  * created so that you can assemble the top on the hole left by cutting it.
  * This enables you to create pocket-like features     _____       _____
  * with minimum waste.                                      \_____/
+ *
+ * open_top when set to true removes the finger pattern from the top cover.
+ * In order to respect boxSize the the top face should sit on top of the walls,
+ * which means the walls will be shorter by 'thick.'
  */
 
 if (false) makecase(flat=true, flip_bottom=true);
@@ -18,6 +22,7 @@ module makecase(
 	teethSize  = [10, 10,  8], // Width of teeth along each axis.
 	spaceSize  = [10, 10,  0], // Spacing between teeth along each axis.
 	flip_bottom = false,       // Flip teeth/spacing on the bottom face.
+	open_top    = false,       // Create no finger-joint pattern on top
 	top    = false, // Generate 2D profile for the top.
 	bottom = false, // Generate 2D profile for the bottom.
 	left   = false, // Generate 2D profile for the left-side.
@@ -32,6 +37,7 @@ module makecase(
 		(boxSize[1] - teeth[1] * teethSize[1] - (teeth[1]-1) * spaceSize[1]) / 2,
 		(boxSize[2] - teeth[2] * teethSize[2] - (teeth[2]-1) * spaceSize[2]) / 2
 	];
+	boxSize = open_top ? boxSize - [0,0,thick] : boxSize;
 	
 	if (pad[0] < 0) echo("Error: makecase can not fit teeth along X axis.");
 	if (pad[1] < 0) echo("Error: makecase can not fit teeth along Y axis.");
@@ -71,27 +77,28 @@ module makecase(
 	module _le() linear_extrude(height=thick) children();
 	
 	// Create specific faces
-	module _top()    face(0,1, [0,0,0,0]);
+	module _top()    face(0,1, [0,0,0,0], [open_top,open_top,open_top,open_top]);
 	module _bottom() face(0,1, flip_bottom ? [1,1,1,1] : [0,0,0,0]);
-	module _left()   face(2,1, flip_bottom ? [0,0,0,1] : [0,0,1,1]);
-	module _right()  face(2,1, flip_bottom ? [0,0,1,0] : [0,0,1,1]);
-	module _front()  face(0,2, flip_bottom ? [0,1,1,1] : [1,1,1,1]);
-	module _back()   face(0,2, flip_bottom ? [1,0,1,1] : [1,1,1,1]);
+	module _left()   face(2,1, flip_bottom ? [0,0,0,1] : [0,0,1,1], [false, false, false, open_top]);
+	module _right()  face(2,1, flip_bottom ? [0,0,1,0] : [0,0,1,1], [false, false, open_top, false]);
+	module _front()  face(0,2, flip_bottom ? [0,1,1,1] : [1,1,1,1], [false, open_top, false, false]);
+	module _back()   face(0,2, flip_bottom ? [1,0,1,1] : [1,1,1,1], [open_top, false, false, false]);
 	
 	// Create a generic face
-	module face(i,j,flips=[false,false,false,false]) {
+	module face(i,j,flips=[false,false,false,false],banguela=[false,false,false,false]) {
 		difference() {
 			square([boxSize[i], boxSize[j]]);
 			
-			teeth_pattern(pad[i], spaceSize[i], teethSize[i], thick, teeth[i], !flips[0]);
+			if (!banguela[0])
+				teeth_pattern(pad[i], spaceSize[i], teethSize[i], thick, teeth[i], !flips[0]);
 			
-			translate([0, boxSize[j]])
+			if (!banguela[1]) translate([0, boxSize[j]])
 				teeth_pattern(pad[i], spaceSize[i], teethSize[i], thick, teeth[i], !flips[1]);
 				
-			rotate([0,0,90])
+			if (!banguela[2]) rotate([0,0,90])
 				teeth_pattern(pad[j], spaceSize[j], teethSize[j], thick, teeth[j], !flips[2]);
 				
-			translate([boxSize[i],0]) rotate([0,0,90])
+			if (!banguela[3]) translate([boxSize[i],0]) rotate([0,0,90])
 				teeth_pattern(pad[j], spaceSize[j], teethSize[j], thick, teeth[j], !flips[3]);
 		}
 	}
