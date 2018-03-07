@@ -3,26 +3,26 @@
  * Original by Lucas V. Hartmann <first_name dot last_name at G's mail>, 2018.
  * Dual licenced under Creative Commons Attribution-Share Alike 3.0 and LGPL2 or later
  *
- * Special note for laser cutting: If flip_bottom is enabled then the walls are 
+ * Special note for laser cutting: If flipBottom is enabled then the walls are 
  * created so that you can assemble the top on the hole left by cutting it.
  * This enables you to create pocket-like features     _____       _____
  * with minimum waste.                                      \_____/
  *
- * open_top when set to true removes the finger pattern from the top cover.
+ * openTop when set to true removes the finger pattern from the top cover.
  * In order to respect boxSize the the top face should sit on top of the walls,
  * which means the walls will be shorter by 'thick.'
  */
 
-if (false) makecase(flat=true, flip_bottom=true);
+if (false) makecase(flat=true, flipBottom=true);
 
 module makecase(
 	thick      = 1.8,          // Wall (sheet) thickness
-	boxSize    = [75, 75, 20], // Dox outside dimensions
+	boxSize    = [75, 75, 20], // Box outside dimensions
 	teeth      = [ 3,  3,  1], // Number of teeth along each axis.
 	teethSize  = [10, 10,  8], // Width of teeth along each axis.
 	spaceSize  = [10, 10,  0], // Spacing between teeth along each axis.
-	flip_bottom = false,       // Flip teeth/spacing on the bottom face.
-	open_top    = false,       // Create no finger-joint pattern on top
+	flipBottom = false,        // Flip teeth/spacing on the bottom face.
+	openTop    = false,        // Create no finger-joint pattern on top
 	top    = false, // Generate 2D profile for the top.
 	bottom = false, // Generate 2D profile for the bottom.
 	left   = false, // Generate 2D profile for the left-side.
@@ -32,12 +32,12 @@ module makecase(
 	flat   = false, // Generate 2D flat profile with all faces like an open dice.
 	assembled = false // Generate a 3D mounted box, just for checking.
 ) {
+	boxSize = openTop ? boxSize - [0,0,thick] : boxSize;
 	pad = [
 		(boxSize[0] - teeth[0] * teethSize[0] - (teeth[0]-1) * spaceSize[0]) / 2,
 		(boxSize[1] - teeth[1] * teethSize[1] - (teeth[1]-1) * spaceSize[1]) / 2,
 		(boxSize[2] - teeth[2] * teethSize[2] - (teeth[2]-1) * spaceSize[2]) / 2
 	];
-	boxSize = open_top ? boxSize - [0,0,thick] : boxSize;
 	
 	if (pad[0] < 0) echo("Error: makecase can not fit teeth along X axis.");
 	if (pad[1] < 0) echo("Error: makecase can not fit teeth along Y axis.");
@@ -77,12 +77,12 @@ module makecase(
 	module _le() linear_extrude(height=thick) children();
 	
 	// Create specific faces
-	module _top()    face(0,1, [0,0,0,0], [open_top,open_top,open_top,open_top]);
-	module _bottom() face(0,1, flip_bottom ? [1,1,1,1] : [0,0,0,0]);
-	module _left()   face(2,1, flip_bottom ? [0,0,0,1] : [0,0,1,1], [false, false, false, open_top]);
-	module _right()  face(2,1, flip_bottom ? [0,0,1,0] : [0,0,1,1], [false, false, open_top, false]);
-	module _front()  face(0,2, flip_bottom ? [0,1,1,1] : [1,1,1,1], [false, open_top, false, false]);
-	module _back()   face(0,2, flip_bottom ? [1,0,1,1] : [1,1,1,1], [open_top, false, false, false]);
+	module _top()    face(0,1, [0,0,0,0], [openTop,openTop,openTop,openTop]);
+	module _bottom() face(0,1, flipBottom ? [1,1,1,1] : [0,0,0,0]);
+	module _left()   face(2,1, flipBottom ? [0,0,0,1] : [0,0,1,1], [false, false, false, openTop]);
+	module _right()  face(2,1, flipBottom ? [0,0,1,0] : [0,0,1,1], [false, false, openTop, false]);
+	module _front()  face(0,2, flipBottom ? [0,1,1,1] : [1,1,1,1], [false, openTop, false, false]);
+	module _back()   face(0,2, flipBottom ? [1,0,1,1] : [1,1,1,1], [openTop, false, false, false]);
 	
 	// Create a generic face
 	module face(i,j,flips=[false,false,false,false],banguela=[false,false,false,false]) {
