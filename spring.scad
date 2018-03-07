@@ -3,6 +3,8 @@
  * Originally by Lucas V. Hartmann <lhartmann@github.com>, 2016.
  * Dual licenced under Creative Commons Attribution-Share Alike 3.0 and LGPL2 or later.
  */
+ 
+include <MCAD/materials.scad>
 
 // Builds a spring, takes space just like a cylinder.
 module spring(
@@ -13,7 +15,7 @@ module spring(
 	nseg   = 16,   // Number of segments per turnn
 	center = false
 ) {
-	translate(center ? [0,0,-l/2] : [0,0,0]) rotate([0,-90,0]) {
+	color("silver") translate(center ? [0,0,-l/2] : [0,0,0]) rotate([0,-90,0]) {
 		X0 = wd;
 		X1 = l-wd;
 		dX = (X1-X0) / (n-2);
@@ -30,17 +32,17 @@ module spring(
 		translate([l-wd, 0, 0]) loop(wd);
 	}
 
-    module loop(l) {
-        for (i=[1:nseg]) {
-            ai=i-1;
-            hull() {
-                rotate([ai/nseg*360, 0, 0])
-                    translate([ai/nseg*l, (d-wd)/2, 0])
-                        cylinder(r=wd/2, h=wd/100);
-                rotate([i/nseg*360, 0, 0])
-                    translate([ i/nseg*l, (d-wd)/2, 0])
-                        cylinder(r=wd/2, h=wd/100);
-            }
-        }
-    }
+	module loop(l) {
+		for (i=[1:nseg]) {
+			ai=i-1;
+			hull() {
+				rotate([ai/nseg*360, 0, 0])
+					translate([ai/nseg*l, (d-wd)/2, 0])
+						cylinder(r=wd/2, h=wd/100);
+				rotate([i/nseg*360, 0, 0])
+					translate([ i/nseg*l, (d-wd)/2, 0])
+						cylinder(r=wd/2, h=wd/100);
+			}
+		}
+	}
 }
