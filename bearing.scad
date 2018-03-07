@@ -43,13 +43,14 @@ SkateBearing = 608;
 // model == XXX ? [inner dia, outer dia, width]:
 function bearingDimensions(model) =
   len(model) == 3 ? model :
-  model == 608 ? [8*mm, 22*mm, 7*mm]:
-  model == 623 ? [3*mm, 10*mm, 4*mm]:
-  model == 624 ? [4*mm, 13*mm, 5*mm]:
-  model == 627 ? [7*mm, 22*mm, 7*mm]:
-  model == 688 ? [8*mm, 16*mm, 4*mm]:
-  model == 698 ? [8*mm, 19*mm, 6*mm]:
-  model == "lm8uu" ? [8*mm, 15*mm, 24*mm]:
+  model == 608 ? [8*mm, 22*mm, 7*mm] :
+  model == 623 ? [3*mm, 10*mm, 4*mm] :
+  model == 624 ? [4*mm, 13*mm, 5*mm] :
+  model == 625 ? [5*mm, 16*mm, 5*mm] :
+  model == 627 ? [7*mm, 22*mm, 7*mm] :
+  model == 688 ? [8*mm, 16*mm, 4*mm] :
+  model == 698 ? [8*mm, 19*mm, 6*mm] :
+  model == "lm8uu" ? [8*mm, 15*mm, 24*mm] :
   [8*mm, 22*mm, 7*mm]; // this is the default
 
 function bearingWidth        (model) = bearingDimensions(model)[BEARING_WIDTH];
