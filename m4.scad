@@ -1,5 +1,4 @@
 /* m4.scad: Am OpenSCAD matrix transformation library.
- * See: http://app.cear.ufpb.br/~lucas.hartmann/2015/09/05/matrix-transformations-on-openscad/
  *
  * Originally by Lucas V. Hartmann <lhartmann@github.com>, 2016.
  * Dual licenced under Creative Commons Attribution-Share Alike 3.0 and LGPL2 or later
@@ -71,12 +70,17 @@ function m4rotm(m) = [
 
 // Extract just the translation vector
 function m4trv(m) = [m[0][3], m[1][3], m[2][3]];
-function m4trx(m) = m[0][3];
-function m4try(m) = m[1][3];
-function m4trz(m) = m[2][3];
 
 // Aply transformation matrix to a single point
 function m4_transform_point(m,p) = m4trv(m*m4tr(p));
+
+// Takes 1D vector and places it on the diagonal of the 2D matrix
+function m4diag(vect) = [
+    for (row = [0:len(vect)-1]) [
+        for (col = [0:len(vect)-1])
+            row==col ? vect[row] : 0
+    ]
+];
 
 // Matrix inversion, this code is a mess
 

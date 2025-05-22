@@ -2,7 +2,7 @@
 // Volume below z=0 slides towards x=-inf
 // Requires 2 children nodes:
 // 1 - Positive solid of joined parts.
-// 2 - Negative solid, volume of the hollow space inside cildren(1).
+// 2 - Negative solid, volume of the hollow space inside children(1).
 module drawer_bottom(depth, wall, big=100, small=0.001) {
 	difference() {
 		drawer_aux_bottom(depth, big, small) { children(0); children(1); }

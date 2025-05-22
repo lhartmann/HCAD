@@ -6,12 +6,12 @@
  
 module boundingbox(BIG=1000) {
     intersection() { 
-        minkowski() { aux([  0,   0, 0]); children(); }
-        minkowski() { aux([180,   0, 0]); children(); }
-        minkowski() { aux([+90,   0, 0]); children(); }
-        minkowski() { aux([-90,   0, 0]); children(); }
-        minkowski() { aux([  0, -90, 0]); children(); }
-        minkowski() { aux([  0, +90, 0]); children(); }
+        minkowski() { aux([  0,   0, 0]); hull() children(); }
+        minkowski() { aux([180,   0, 0]); hull() children(); }
+        minkowski() { aux([+90,   0, 0]); hull() children(); }
+        minkowski() { aux([-90,   0, 0]); hull() children(); }
+        minkowski() { aux([  0, -90, 0]); hull() children(); }
+        minkowski() { aux([  0, +90, 0]); hull() children(); }
     }
 
     module aux(r) rotate(r) cylinder(r=BIG, h=BIG, $fn=4);

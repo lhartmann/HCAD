@@ -39,7 +39,7 @@ module screw_thread(h, Dmaj, P, cxy=0, cz=0, center=false, taper=false) {
 		cylinder(r1=taper_r1, r2=taper_r2, h=h);
 		cylinder(r1=taper_r2, r2=taper_r1, h=h);
 		
-		step = 15; // 5 degrees per segment
+		step = 5; // 5 degrees per segment
 		for (i=[-360:step:(ceil(h/P)+1)*360]) {
 			translate([0,0,i/360*P]) rotate([0,0,i]) hull() {
 				rotate([90,0,0])

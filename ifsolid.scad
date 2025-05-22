@@ -12,41 +12,43 @@
 // }
 // BIG is the diameter of a sphere large enough to enclose everything.
 module ifsolid(BIG=1000) {
+	// True output
 	intersection() {
-		universe();
-		
-		intersection() {
-			union() {
-				children(1);
-			}
-			minkowski() {
-				union() {
-					children(0);
-					far_far_away();
-				}
-				universe();
-			}
+		children(1);
+		mask_from() children(0);
+	}
+
+	// False output
+	difference() {
+		children(2);
+		mask_from() children(0);
+	}
+
+	// MASK with minkowski hits nn OpenSCAD bug. For all A:
+	//   minkowski(A, void) -> void      Mathematically correct
+	//   minkowski(A, void) -> A         OpenSCAD's implementation.
+	module mask_from() {
+		clear_fake_void() minkowski() {
+			universe();
+			fake_void() children();
 		}
 	}
-	
-	intersection() {
-		universe();
-		
-		difference() {
-			children(2);
-			minkowski() {
-				union() {
-					children(0);
-					far_far_away();
-				}
-				universe();
-			}
-		}
-	}
-	
-	module far_far_away() {
+
+	// Fake void by adding geometry outside the universe./
+	module fake_void() {
 		translate(10*[BIG,BIG,BIG]) cube();
+		children();
 	}
+
+	// Remove any geometry outside the universe.
+	module clear_fake_void() {
+		intersection() {
+			universe();
+			children();
+		}
+	}
+
+	// Universe
 	module universe() {
 		cube(BIG*[2,2,2], center=true);
 	}

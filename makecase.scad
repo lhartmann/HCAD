@@ -11,9 +11,6 @@
  * openTop when set to true removes the finger pattern from the top cover.
  * In order to respect boxSize the the top face should sit on top of the walls,
  * which means the walls will be shorter by 'thick.'
- *
- * kerf compensation is used to make teeth tighter. Only the side walls are affected
- * no top or bottom (or it would break flipBottom pocket feature).
  */
 
 if (false) makecase(flat=true, flipBottom=true);
@@ -26,8 +23,6 @@ module makecase(
 	spaceSize  = [10, 10,  0], // Spacing between teeth along each axis.
 	flipBottom = false,        // Flip teeth/spacing on the bottom face.
 	openTop    = false,        // Create no finger-joint pattern on top
-	kerf   = 0,     // Laser/CNC cut width.
-	center = false, // Center single-face drawings
 	top    = false, // Generate 2D profile for the top.
 	bottom = false, // Generate 2D profile for the bottom.
 	left   = false, // Generate 2D profile for the left-side.
@@ -49,12 +44,12 @@ module makecase(
 	if (pad[2] < 0) echo("Error: makecase can not fit teeth along Z axis.");
 	
 	// Possible renders:
-	if (top)    translate(center ? [-boxSize[0], -boxSize[1]]/2 : [0,0,0]) _top();
-	if (bottom) translate(center ? [-boxSize[0], -boxSize[1]]/2 : [0,0,0]) _bottom();
-	if (left)   translate(center ? [-boxSize[2], -boxSize[1]]/2 : [0,0,0]) _left();
-	if (right)  translate(center ? [-boxSize[2], -boxSize[1]]/2 : [0,0,0]) _right();
-	if (front)  translate(center ? [-boxSize[0], -boxSize[2]]/2 : [0,0,0]) _front();
-	if (back)   translate(center ? [-boxSize[0], -boxSize[2]]/2 : [0,0,0]) _back();
+	if (top)    _top();
+	if (bottom) _bottom();
+	if (left)   _left();
+	if (right)  _right();
+	if (front)  _front();
+	if (back)   _back();
 	if (flat) { // Flattened dice-like positioning of all faces
 		_top();
 		translate([-boxSize[2]-10, 0]) _left();
@@ -82,22 +77,12 @@ module makecase(
 	module _le() linear_extrude(height=thick) children();
 	
 	// Create specific faces
-	module _top()
-		face(0,1, [0,0,0,0], [openTop,openTop,openTop,openTop]);
-	module _bottom()
-		face(0,1, flipBottom ? [1,1,1,1] : [0,0,0,0]);
-	module _left()
-		_kerf(0,kerf)
-		face(2,1, flipBottom ? [0,0,0,1] : [0,0,1,1], [false, false, false, openTop]);
-	module _right()
-		_kerf(0,kerf)
-		face(2,1, flipBottom ? [0,0,1,0] : [0,0,1,1], [false, false, openTop, false]);
-	module _front()
-		_kerf(kerf,0)
-		face(0,2, flipBottom ? [0,1,1,1] : [1,1,1,1], [false, openTop, false, false]);
-	module _back()
-		_kerf(kerf,0)
-		face(0,2, flipBottom ? [1,0,1,1] : [1,1,1,1], [openTop, false, false, false]);
+	module _top()    face(0,1, [0,0,0,0], [openTop,openTop,openTop,openTop]);
+	module _bottom() face(0,1, flipBottom ? [1,1,1,1] : [0,0,0,0]);
+	module _left()   face(2,1, flipBottom ? [0,0,0,1] : [0,0,1,1], [false, false, false, openTop]);
+	module _right()  face(2,1, flipBottom ? [0,0,1,0] : [0,0,1,1], [false, false, openTop, false]);
+	module _front()  face(0,2, flipBottom ? [0,1,1,1] : [1,1,1,1], [false, openTop, false, false]);
+	module _back()   face(0,2, flipBottom ? [1,0,1,1] : [1,1,1,1], [openTop, false, false, false]);
 	
 	// Create a generic face
 	module face(i,j,flips=[false,false,false,false],banguela=[false,false,false,false]) {
@@ -116,14 +101,6 @@ module makecase(
 			if (!banguela[3]) translate([boxSize[i],0]) rotate([0,0,90])
 				teeth_pattern(pad[j], spaceSize[j], teethSize[j], thick, teeth[j], !flips[3]);
 		}
-	}
-	
-	// Compensate kerf
-	module _kerf(kx, ky) minkowski() {
-		kx = kx==0 ? 1e-12 : kx;
-		ky = ky==0 ? 1e-12 : ky;
-		if (kerf) square([kx,ky], center=true);
-		union() children();
 	}
 	
 	// Create a vertically centered teeth pattern along X+ axis:
