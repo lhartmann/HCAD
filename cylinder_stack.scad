@@ -27,6 +27,7 @@ module cylinder_s(h, r1, r2, r, d, d1, d2) {
     _r1 =
         r1 != undef ? r1   :
         d1 != undef ? d1/2 :
+        d  != undef ? d/2  :
         r  != undef ? r    : 1 ;
 
     _r2 =
