@@ -34,7 +34,7 @@ module ifsolid(BIG=1000) {
 		}
 	}
 
-	// Fake void by adding geometry outside the universe./
+	// Fake void by adding geometry outside the universe.
 	module fake_void() {
 		translate(10*[BIG,BIG,BIG]) cube();
 		children();
