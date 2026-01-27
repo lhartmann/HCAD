@@ -23,7 +23,7 @@ module cylinder_stack(spec=[], center=false) {
 }
 
 
-module cylinder_s(h, r1, r2, r, d, d1, d2) {
+module cylinder_s(h, r1, r2, r, d, d1, d2, center=false) {
     _r1 =
         r1 != undef ? r1   :
         d1 != undef ? d1/2 :
@@ -34,7 +34,8 @@ module cylinder_s(h, r1, r2, r, d, d1, d2) {
         r2 != undef ? r2   :
         d2 != undef ? d2/2 : _r1;
 
-    cylinder(h, _r1, _r2);
-
-    translate([0,0,h]) children();
+    translate(center ? [0,0,-h/2] : [0,0,0]) {
+        cylinder(h, _r1, _r2);
+        translate([0,0,h]) children();
+    }
 }
