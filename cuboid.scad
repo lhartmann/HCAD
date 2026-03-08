@@ -40,5 +40,5 @@ module cuboid(size=[1,1,1], r=0, b=0, center=false, align=[1,1,1]) {
         cylinder(r1=mb, h=mb, r2=0, $fn=4);
     }
 
-    function is_scalar(x) = r == max(x);
+    function is_scalar(x) = x == max(x);
 }
